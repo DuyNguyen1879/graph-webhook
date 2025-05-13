@@ -1,14 +1,15 @@
 export default function handler(req, res) {
-  // Trả về validationToken nếu có
+  // B1: Xác minh webhook từ Microsoft Graph
   if (req.method === "GET" && req.query.validationToken) {
     return res.status(200).send(req.query.validationToken);
   }
 
-  // Nhận notification từ Microsoft Graph
+  // B2: Xử lý thông báo từ Microsoft Graph (sau khi đã đăng ký)
   if (req.method === "POST") {
-    console.log("🔔 Notification received:", JSON.stringify(req.body, null, 2));
+    console.log("📩 Notification received:", req.body);
     return res.status(202).end(); // 202 Accepted
   }
 
-  return res.status(405).send("Method Not Allowed");
+  // B3: Nếu không đúng phương thức GET/POST
+  return res.status(404).send("Not found");
 }
